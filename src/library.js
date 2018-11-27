@@ -41,12 +41,23 @@ const fillBoard = function(length) {
   return board;
 }
 
+const getNeighbour = function(inputArray,index) {
+  let neighbours = [];
+  if(index < 0){return neighbours}
+  neighbours.push(inputArray[index-1]);
+  neighbours.push(inputArray[index+1]);
+  return neighbours.filter( (x)=>x );
+}
 
-
+const getHorizontalNeighbours = function(inputArray, arrayIndex, subArrayIndex){
+  return getNeighbour(inputArray[arrayIndex], subArrayIndex);
+}
 module.exports = {
   repeat,
   createBoard,
   joinWithPipes,
   generateDeads,
   fillBoard,
+  getNeighbour,
+  getHorizontalNeighbours
 };

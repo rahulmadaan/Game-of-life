@@ -3,6 +3,8 @@ let { repeat,
   createBoard,
   joinWithPipes,
   generateDeads,
+  getNeighbour,
+  getHorizontalNeighbours,
   fillBoard } = require('../src/library.js');
 describe('repeat',function(){
 
@@ -61,6 +63,38 @@ describe('createBoard',function(){
   });
   it('should return same input for array containing undefined' ,function(){
     assert.deepEqual(createBoard([[]]), []);
+  });
+});
+
+describe('getNeighbour',function(){
+  it('should return empty array for empty array',function(){
+    assert.deepEqual(getNeighbour([]),[]);
+  });
+  
+  it('should return one neighbour for edge index',function(){
+    assert.deepEqual(getNeighbour([1,2,3,4],0),[2]);
+    assert.deepEqual(getNeighbour([1,2,3,4],3),[3]);
+  });
+  it('should return empty array for invalid index',function(){
+    assert.deepEqual(getNeighbour([1,2,3,4],7), []);
+    assert.deepEqual(getNeighbour([1,2,3,4], -1), []);
+  });
+  it('should return two neighbours for non-edge index',function(){
+    assert.deepEqual(getNeighbour([1,2,3,4], 2), [2,4]);
+
+  });
+});
+const arrayOfArray = [[1,2,3],[4,5,6],[7,8,9]]
+describe('getHorizontalNeighbours',function(){
+
+  it('should work for edge indexes',function(){
+    assert.deepEqual(getHorizontalNeighbours(arrayOfArray,0,0),[2]);
+    assert.deepEqual(getHorizontalNeighbours(arrayOfArray,2,2),[8]);
+  });
+  it('should work for non-edge indexes',function(){
+    assert.deepEqual(getHorizontalNeighbours(arrayOfArray,0,1),[1,3]);
+    assert.deepEqual(getHorizontalNeighbours(arrayOfArray,1,1),[4,6]);
+
   });
 
 });
