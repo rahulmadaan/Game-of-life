@@ -5,7 +5,10 @@ let { repeat,
   generateDeads,
   getNeighbour,
   getHorizontalNeighbours,
+  getVerticalNeighbours,
+  getAllNeighbours,
   fillBoard } = require('../src/library.js');
+
 describe('repeat',function(){
 
   it('should work for zero input',function(){
@@ -16,6 +19,7 @@ describe('repeat',function(){
     assert.equal(repeat('*',4),'****');
     assert.equal(repeat('*',1),'*');
   });
+
 });
 
 
@@ -37,8 +41,8 @@ describe('fillBoard',function(){
   it('should work for array of length 0',function(){
     assert.deepEqual(fillBoard(0),[]);
   });
-  it('should work for length as positive number',function(){
 
+  it('should work for length as positive number',function(){
     assert.deepEqual(fillBoard(1),[['D']]);
     assert.deepEqual(fillBoard(3),[['D','D','D'],['D','D','D'],['D','D','D']]);
   });
@@ -51,50 +55,108 @@ describe('joinWithPipes',function(){
     assert.deepEqual(joinWithPipes([]), []);
 
   });
+
   it('should add pipes to the string', function(){
     assert.deepEqual(joinWithPipes(["D"]), ["|", " D |"]);
     assert.deepEqual(joinWithPipes(["D", "D"]), ["|", " D |", " D |"]);
   });
+
 });
 
 describe('createBoard',function(){
+
   it('should return empty array for empty array',function(){
     assert.deepEqual(createBoard([]), []);
   });
+
   it('should return same input for array containing undefined' ,function(){
     assert.deepEqual(createBoard([[]]), []);
   });
+
 });
 
 describe('getNeighbour',function(){
+
   it('should return empty array for empty array',function(){
     assert.deepEqual(getNeighbour([]),[]);
   });
-  
+
   it('should return one neighbour for edge index',function(){
     assert.deepEqual(getNeighbour([1,2,3,4],0),[2]);
     assert.deepEqual(getNeighbour([1,2,3,4],3),[3]);
   });
+
   it('should return empty array for invalid index',function(){
     assert.deepEqual(getNeighbour([1,2,3,4],7), []);
     assert.deepEqual(getNeighbour([1,2,3,4], -1), []);
   });
+
   it('should return two neighbours for non-edge index',function(){
     assert.deepEqual(getNeighbour([1,2,3,4], 2), [2,4]);
-
   });
+
 });
+
 const arrayOfArray = [[1,2,3],[4,5,6],[7,8,9]]
+
 describe('getHorizontalNeighbours',function(){
 
   it('should work for edge indexes',function(){
     assert.deepEqual(getHorizontalNeighbours(arrayOfArray,0,0),[2]);
     assert.deepEqual(getHorizontalNeighbours(arrayOfArray,2,2),[8]);
   });
+
   it('should work for non-edge indexes',function(){
     assert.deepEqual(getHorizontalNeighbours(arrayOfArray,0,1),[1,3]);
     assert.deepEqual(getHorizontalNeighbours(arrayOfArray,1,1),[4,6]);
-
   });
 
 });
+
+describe('getVerticalNeighbours', function(){
+
+  it('should return an empty array for an empty array', function(){
+    assert.deepEqual(getVerticalNeighbours([],0,0), []);
+  });
+
+  it('should return one neighbour for edge index', function(){
+    assert.deepEqual(getVerticalNeighbours(arrayOfArray,0,0), [4]);
+    assert.deepEqual(getVerticalNeighbours(arrayOfArray,0,1), [5]);
+    assert.deepEqual(getVerticalNeighbours(arrayOfArray,2,0), [4]);
+    assert.deepEqual(getVerticalNeighbours(arrayOfArray,2,2), [6]);
+  });
+
+  it('should return two neighbours for non-edge index', function(){
+    assert.deepEqual(getVerticalNeighbours(arrayOfArray,1,1), [2,8]);
+  });
+    
+});
+
+describe('getAllNeighbours', function(){
+
+  it('should return empty array for empty array', function(){
+    assert.deepEqual(getAllNeighbours([], 0, 0), []);
+    assert.deepEqual(getAllNeighbours([], 1, 1), []);
+  });
+
+  it('should return 3 neighbours for corner cells', function(){
+    assert.deepEqual(getAllNeighbours(arrayOfArray, 0, 0), [2,4,5]);
+    assert.deepEqual(getAllNeighbours(arrayOfArray, 2, 0), [4,5,8]);
+    assert.deepEqual(getAllNeighbours(arrayOfArray, 2, 2), [5,6,8]);
+    assert.deepEqual(getAllNeighbours(arrayOfArray, 0, 2), [2,5,6]);
+  });
+
+  it('should return 5 neighbours for cells in sides', function(){
+    assert.deepEqual(getAllNeighbours(arrayOfArray, 0, 1), [1,3,4,5,6]);
+    assert.deepEqual(getAllNeighbours(arrayOfArray, 1, 0), [1,2,5,7,8]);
+    assert.deepEqual(getAllNeighbours(arrayOfArray, 1, 2), [2,3,5,8,9]);
+    assert.deepEqual(getAllNeighbours(arrayOfArray, 2, 1), [4,5,6,7,9]);
+  });
+
+  it('should return all 8 neighbours for cells in middle', function(){
+    assert.deepEqual(getAllNeighbours(arrayOfArray, 1, 1), [1,2,3,4,6,7,8,9]);
+  });
+  
+
+});
+

@@ -52,6 +52,40 @@ const getNeighbour = function(inputArray,index) {
 const getHorizontalNeighbours = function(inputArray, arrayIndex, subArrayIndex){
   return getNeighbour(inputArray[arrayIndex], subArrayIndex);
 }
+
+const getVerticalNeighbours = function(inputArray,arrayIndex,subArrayIndex) {
+  let neighbours = [];
+  if (inputArray.length === 0){return neighbours;}
+
+  let topNeighbours = inputArray[arrayIndex-1];
+  let bottomNeighbours = inputArray[arrayIndex+1];
+  if (topNeighbours !== undefined){
+    neighbours.push(topNeighbours[subArrayIndex]);
+  }
+  if (bottomNeighbours !== undefined){
+    neighbours.push(bottomNeighbours[subArrayIndex]);
+  }
+  return neighbours;
+}
+
+const getAllNeighbours = function(inputArray,arrayIndex,subArrayIndex) {
+  let neighbours = [];
+  if (arrayIndex < 0 || subArrayIndex < 0 || inputArray.length === 0){
+    return neighbours;
+  }
+
+  neighbours.push(getNeighbour(inputArray[arrayIndex],subArrayIndex));  // horizontal neighbours
+  if(inputArray[arrayIndex-1] !== undefined){
+  neighbours.push(getNeighbour(inputArray[arrayIndex-1],subArrayIndex)); // top diagonal neighbours
+  }
+  if(inputArray[arrayIndex+1] !== undefined){
+  neighbours.push(getNeighbour(inputArray[arrayIndex+1],subArrayIndex)); // bottom diagonal neighbours
+  }
+  neighbours.push(getVerticalNeighbours(inputArray, arrayIndex, subArrayIndex) );
+  return neighbours.reduce( (acc, value)=> [...acc, ...value], [] ).sort();  
+}
+
+
 module.exports = {
   repeat,
   createBoard,
@@ -59,5 +93,9 @@ module.exports = {
   generateDeads,
   fillBoard,
   getNeighbour,
-  getHorizontalNeighbours
+  getHorizontalNeighbours,
+  getVerticalNeighbours,
+  getAllNeighbours
 };
+
+
