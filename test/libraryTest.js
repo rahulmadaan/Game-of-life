@@ -157,6 +157,10 @@ describe('getAllNeighbours', function() {
     assert.deepEqual(getAllNeighbours([], 1, 1), []);
   });
 
+  it('should return empty array for array of one element', function(){
+    assert.deepEqual(getAllNeighbours([[1]], 0, 0), []);
+  });
+
   it('should return 3 neighbours for corner cells', function() {
     assert.deepEqual(getAllNeighbours(arrayOfArray, 0, 0), [2, 4, 5]);
     assert.deepEqual(getAllNeighbours(arrayOfArray, 2, 0), [4, 5, 8]);

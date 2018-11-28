@@ -74,7 +74,7 @@ const getVerticalNeighbours = function(inputArray, arrayIndex, subArrayIndex) {
 
 const getAllNeighbours = function(inputArray, arrayIndex, subArrayIndex) {
   let neighbours = [];
-  if (arrayIndex < 0 || subArrayIndex < 0 || inputArray.length === 0) {
+  if (arrayIndex < 0 || subArrayIndex < 0 || inputArray.length < 2) {
     return neighbours;
   }
 
@@ -108,6 +108,20 @@ const toggleState = function(inputArray, arrayIndex, subArrayIndex) {
   let currentState = result[arrayIndex][subArrayIndex];
   currentState = 1 - currentState;
   result[arrayIndex][subArrayIndex] = currentState;
+  return result;
+}
+
+const daysIteration = function(inputArray) {
+  let result = inputArray.slice();
+  for (let count = 0; count < inputArray.length; count++) {
+    for (let index = 0; index < inputArray[count].length; index++) {
+      let countAliveNeighbours = countAliveNeighboursOfCell(inputArray,
+        inputArray[count], inputArray[count][index]);
+      console.log('count alive is ' + countAliveNeighbours);
+      let state = isAlive(countAliveNeighbours, inputArray[count][index]);
+      result[count][index] = state;
+    }
+  }
   return result;
 }
 
