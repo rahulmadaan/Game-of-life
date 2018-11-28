@@ -1,16 +1,17 @@
 let assert = require('assert');
 
 let {
-  repeat,
-  createBoard,
-  joinWithPipes,
-  generateDeads,
   getNeighbour,
   getHorizontalNeighbours,
   getVerticalNeighbours,
   getAllNeighbours,
   countAliveNeighboursOfCell,
   isAlive,
+
+  repeat,
+  createBoard,
+  joinWithPipes,
+  generateDeads,
   toggleState,
   fillBoard
 } = require('../src/library.js');
@@ -243,3 +244,4 @@ describe('toggleState', function(){
   });
 
 });
+

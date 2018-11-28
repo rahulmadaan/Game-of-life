@@ -1,45 +1,4 @@
-const repeat = function(symbol, length) {
-  return new Array(length).fill(symbol).join('');
-}
-
-const generateLine = (length) => repeat("-", length);
-
-const createBoard = function(data) {
-  let result = [];
-  let lengthOfData = data.length;
-  if (lengthOfData === 0 || data[0].length === 0) { return result }
-  result.push(generateLine(lengthOfData * 4 + 1));
-
-  for (let index = 0; index < lengthOfData; index++) {
-    result.push(joinWithPipes(data[index]).join(""));
-    result.push(generateLine(lengthOfData * 4 + 1));
-  }
-
-  return result.join("\n");
-}
-
-const joinWithPipes = function(input) {
-  let output = [];
-  if (input[0] !== undefined) { output.push('|') }
-
-  for (value of input) {
-    output.push(" " + value + " |");
-  }
-
-  return output;
-}
-
-const generateDeads = function(length) {
-  return new Array(length).fill(0);
-}
-
-const fillBoard = function(length) {
-  let board = [];
-  for (let count = 0; count < length; count++) {
-    board.push(generateDeads(length));
-  }
-  return board;
-}
+/* ------ LOGIC ------ */
 
 const getNeighbour = function(inputArray, index) {
   let neighbours = [];
@@ -103,6 +62,52 @@ const isAlive = function(aliveNeighbours, currentState) {
   return currentState;
 }
 
+/* ------- VISUAL -------- */
+
+const repeat = function(symbol, length) {
+  return new Array(length).fill(symbol).join('');
+}
+
+const generateDeads = function(length) {
+  return new Array(length).fill(0);
+}
+
+const generateLine = (length) => repeat("-", length);
+
+const joinWithPipes = function(input) {
+  let output = [];
+  if (input[0] !== undefined) { output.push('|') }
+
+  for (value of input) {
+    output.push(" " + value + " |");
+  }
+
+  return output;
+}
+
+const createBoard = function(data) {
+  let result = [];
+  let lengthOfData = data.length;
+  if (lengthOfData === 0 || data[0].length === 0) { return result }
+  result.push(generateLine(lengthOfData * 4 + 1));
+
+  for (let index = 0; index < lengthOfData; index++) {
+    result.push(joinWithPipes(data[index]).join(""));
+    result.push(generateLine(lengthOfData * 4 + 1));
+  }
+
+  return result.join("\n");
+}
+
+const fillBoard = function(length) {
+  let board = [];
+  for (let count = 0; count < length; count++) {
+    board.push(generateDeads(length));
+  }
+  return board;
+}
+
+
 const toggleState = function(inputArray, arrayIndex, subArrayIndex) {
   let result = inputArray.slice();
   let currentState = result[arrayIndex][subArrayIndex];
@@ -111,19 +116,7 @@ const toggleState = function(inputArray, arrayIndex, subArrayIndex) {
   return result;
 }
 
-const daysIteration = function(inputArray) {
-  let result = inputArray.slice();
-  for (let count = 0; count < inputArray.length; count++) {
-    for (let index = 0; index < inputArray[count].length; index++) {
-      let countAliveNeighbours = countAliveNeighboursOfCell(inputArray,
-        inputArray[count], inputArray[count][index]);
-      console.log('count alive is ' + countAliveNeighbours);
-      let state = isAlive(countAliveNeighbours, inputArray[count][index]);
-      result[count][index] = state;
-    }
-  }
-  return result;
-}
+/* ------- EXPORTS ------- */
 
 module.exports = {
   repeat,
