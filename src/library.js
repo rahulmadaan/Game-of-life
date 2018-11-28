@@ -3,11 +3,10 @@
 const getNeighbour = function(inputArray, index) {
   let neighbours = [];
   if (index < 0) { return neighbours }
-
   neighbours.push(inputArray[index - 1]);
   neighbours.push(inputArray[index + 1]);
 
-  return neighbours.filter((x) => x);
+  return neighbours.filter((x) => x!==undefined);
 }
 
 const getHorizontalNeighbours = function(inputArray, arrayIndex, subArrayIndex) {
@@ -19,7 +18,7 @@ const getVerticalNeighbours = function(inputArray, arrayIndex, subArrayIndex) {
   let topNeighbours = inputArray[arrayIndex - 1];
   let bottomNeighbours = inputArray[arrayIndex + 1];
 
-  if (inputArray.length === 0) { return neighbours }
+  if (inputArray[0] === undefined) { return neighbours }
   if (topNeighbours !== undefined) {
     neighbours.push(topNeighbours[subArrayIndex]);
   }
@@ -39,17 +38,20 @@ const getAllNeighbours = function(inputArray, arrayIndex, subArrayIndex) {
 
   // horizontal neighbours
   neighbours.push(getNeighbour(inputArray[arrayIndex], subArrayIndex)); 
+
   // top diagonal neighbours
   if (inputArray[arrayIndex - 1] !== undefined) {
     neighbours.push(getNeighbour(inputArray[arrayIndex - 1], subArrayIndex)); 
   }
+
   // bottom diagonal neighbours
   if (inputArray[arrayIndex + 1] !== undefined) {
     neighbours.push(getNeighbour(inputArray[arrayIndex + 1], subArrayIndex)); 
   }
+
   //vertical neighbours
   neighbours.push(getVerticalNeighbours(inputArray, arrayIndex, subArrayIndex));
-  return neighbours.toString().split(',').map( x=>+x ).sort();
+  return neighbours.toString().split(',').map(x=>+x).sort();
 }
 
 const countAliveNeighboursOfCell = function(inputArray, arrayIndex, subArrayIndex){
@@ -60,6 +62,22 @@ const isAlive = function(aliveNeighbours, currentState) {
   if(aliveNeighbours < 2 || aliveNeighbours > 3) { return 0 }
   if(aliveNeighbours === 3) { return 1 }
   return currentState;
+}
+
+const daysIteration = function(inputArray) {
+  let result = inputArray.map(x=>x.slice());
+
+  inputArray.map( (elemOfArray, count)=>{
+      inputArray[count].map( (elem, index)=>{
+
+          let totalAlive = countAliveNeighboursOfCell(inputArray, count, index);
+          let state =  isAlive(totalAlive, inputArray[count][index]);
+          result[count][index] = state;
+
+          });
+      });
+
+  return result;
 }
 
 /* ------- VISUAL -------- */
@@ -107,7 +125,6 @@ const fillBoard = function(length) {
   return board;
 }
 
-
 const toggleState = function(inputArray, arrayIndex, subArrayIndex) {
   let result = inputArray.slice();
   let currentState = result[arrayIndex][subArrayIndex];
@@ -131,4 +148,5 @@ module.exports = {
   countAliveNeighboursOfCell,
   isAlive,
   toggleState,
+  daysIteration
 };
