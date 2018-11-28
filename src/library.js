@@ -7,25 +7,25 @@ const generateLine = (length) => repeat("-", length);
 const createBoard = function(data) {
   let result = [];
   let lengthOfData = data.length;
-  if (lengthOfData === 0 || data[0].length === 0) {
-    return result;
-  }
+  if (lengthOfData === 0 || data[0].length === 0) { return result }
   result.push(generateLine(lengthOfData * 4 + 1));
+
   for (let index = 0; index < lengthOfData; index++) {
     result.push(joinWithPipes(data[index]).join(""));
     result.push(generateLine(lengthOfData * 4 + 1));
   }
+
   return result.join("\n");
 }
 
 const joinWithPipes = function(input) {
   let output = [];
-  if (input[0] !== undefined) {
-    output.push('|');
-  }
+  if (input[0] !== undefined) { output.push('|') }
+
   for (value of input) {
     output.push(" " + value + " |");
   }
+
   return output;
 }
 
@@ -44,8 +44,10 @@ const fillBoard = function(length) {
 const getNeighbour = function(inputArray, index) {
   let neighbours = [];
   if (index < 0) { return neighbours }
+
   neighbours.push(inputArray[index - 1]);
   neighbours.push(inputArray[index + 1]);
+
   return neighbours.filter((x) => x);
 }
 
@@ -55,16 +57,18 @@ const getHorizontalNeighbours = function(inputArray, arrayIndex, subArrayIndex) 
 
 const getVerticalNeighbours = function(inputArray, arrayIndex, subArrayIndex) {
   let neighbours = [];
-  if (inputArray.length === 0) { return neighbours; }
-
   let topNeighbours = inputArray[arrayIndex - 1];
   let bottomNeighbours = inputArray[arrayIndex + 1];
+
+  if (inputArray.length === 0) { return neighbours }
   if (topNeighbours !== undefined) {
     neighbours.push(topNeighbours[subArrayIndex]);
   }
+
   if (bottomNeighbours !== undefined) {
     neighbours.push(bottomNeighbours[subArrayIndex]);
   }
+
   return neighbours;
 }
 
@@ -74,15 +78,19 @@ const getAllNeighbours = function(inputArray, arrayIndex, subArrayIndex) {
     return neighbours;
   }
 
-  neighbours.push(getNeighbour(inputArray[arrayIndex], subArrayIndex)); // horizontal neighbours
-
+  // horizontal neighbours
+  neighbours.push(getNeighbour(inputArray[arrayIndex], subArrayIndex)); 
+  // top diagonal neighbours
   if (inputArray[arrayIndex - 1] !== undefined) {
-    neighbours.push(getNeighbour(inputArray[arrayIndex - 1], subArrayIndex)); // top diagonal neighbours
+    neighbours.push(getNeighbour(inputArray[arrayIndex - 1], subArrayIndex)); 
   }
+  // bottom diagonal neighbours
   if (inputArray[arrayIndex + 1] !== undefined) {
-    neighbours.push(getNeighbour(inputArray[arrayIndex + 1], subArrayIndex)); // bottom diagonal neighbours
+    neighbours.push(getNeighbour(inputArray[arrayIndex + 1], subArrayIndex)); 
   }
+  //vertical neighbours
   neighbours.push(getVerticalNeighbours(inputArray, arrayIndex, subArrayIndex));
+
   return neighbours.toString().split(',').map( x=>+x ).sort();
 }
 
@@ -91,15 +99,8 @@ const countAliveNeighboursOfCell = function(inputArray, arrayIndex, subArrayInde
 }
 
 const isAlive = function(aliveNeighbours, currentState) {
-
-  if(aliveNeighbours < 2 || aliveNeighbours > 3) {
-    return 0;
-  }
-
-  if(aliveNeighbours == 3) {
-    return 1;
-  }
-
+  if(aliveNeighbours < 2 || aliveNeighbours > 3) { return 0 }
+  if(aliveNeighbours === 3) { return 1 }
   return currentState;
 }
 

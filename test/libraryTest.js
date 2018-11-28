@@ -77,10 +77,11 @@ describe('createBoard', function() {
     assert.deepEqual(createBoard([]), []);
   });
 
-  it('should return same input for array containing undefined', function() {
+  it('should return empty array for array of empty arrays', function() {
     assert.deepEqual(createBoard([ [] ]), []);
+    assert.deepEqual(createBoard([ [],[] ]), []);
   });
-
+   
 });
 
 describe('getNeighbour', function() {
