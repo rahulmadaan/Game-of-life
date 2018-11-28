@@ -90,7 +90,6 @@ const getAllNeighbours = function(inputArray, arrayIndex, subArrayIndex) {
   }
   //vertical neighbours
   neighbours.push(getVerticalNeighbours(inputArray, arrayIndex, subArrayIndex));
-
   return neighbours.toString().split(',').map( x=>+x ).sort();
 }
 
@@ -104,7 +103,13 @@ const isAlive = function(aliveNeighbours, currentState) {
   return currentState;
 }
 
-
+const toggleState = function(inputArray, arrayIndex, subArrayIndex) {
+  let result = inputArray.slice();
+  let currentState = result[arrayIndex][subArrayIndex];
+  currentState = 1 - currentState;
+  result[arrayIndex][subArrayIndex] = currentState;
+  return result;
+}
 
 module.exports = {
   repeat,
@@ -118,4 +123,5 @@ module.exports = {
   getAllNeighbours,
   countAliveNeighboursOfCell,
   isAlive,
+  toggleState,
 };

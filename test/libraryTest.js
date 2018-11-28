@@ -11,6 +11,7 @@ let {
   getAllNeighbours,
   countAliveNeighboursOfCell,
   isAlive,
+  toggleState,
   fillBoard
 } = require('../src/library.js');
 
@@ -225,6 +226,16 @@ describe('isAlive', function(){
   it('should return 1 if alive neighbour is 3, at any state', function(){
     assert.deepEqual(isAlive(3,1), 1);
     assert.deepEqual(isAlive(3,0), 1);
+  });
+
+});
+
+describe('toggleState', function(){
+
+  it('should toggle the state of that cordinate ', function(){
+    assert.deepEqual(toggleState([[0]],0,0), [[1]]);
+    assert.deepEqual(toggleState([[1]],0,0), [[0]]);
+    assert.deepEqual(toggleState( [[1], [0]], 0, 0), [[0], [0]]);
   });
 
 });
