@@ -105,6 +105,22 @@ const isAlive = function(aliveNeighbours, currentState) {
   return currentState;
 }
 
+const daysIteration = function(inputArray) {
+  let result = inputArray.map(x=>x.slice());
+
+  inputArray.map( (elemOfArray, count)=>{
+      inputArray[count].map( (elem, index)=>{
+
+          let totalAlive = countAliveNeighboursOfCell(inputArray, count, index);
+          let state =  isAlive(totalAlive, inputArray[count][index]);
+          result[count][index] = state;
+
+          });
+      });
+
+  return result;
+}
+
 const toggleState = function(inputArray, arrayIndex, subArrayIndex) {
   let result = inputArray.slice();
   let currentState = result[arrayIndex][subArrayIndex];
@@ -112,6 +128,9 @@ const toggleState = function(inputArray, arrayIndex, subArrayIndex) {
   result[arrayIndex][subArrayIndex] = currentState;
   return result;
 }
+
+
+
 
 
 module.exports = {
@@ -127,4 +146,5 @@ module.exports = {
   countAliveNeighboursOfCell,
   isAlive,
   toggleState,
+  daysIteration
 };

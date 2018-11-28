@@ -12,7 +12,8 @@ let {
   countAliveNeighboursOfCell,
   isAlive,
   toggleState,
-  fillBoard
+  fillBoard,
+  daysIteration
 } = require('../src/library.js');
 
 describe('repeat', function() {
@@ -243,3 +244,27 @@ describe('toggleState', function(){
   });
 
 });
+
+describe('daysIteration',function(){
+  it('should return empty array for empty array',function(){
+    assert.deepEqual(daysIteration([]),[]);
+    assert.deepEqual(daysIteration([[]]),[[]]);
+  });
+  it('should return 0 for single dead cell',function(){
+    assert.deepEqual(daysIteration([[0]]),[[0]]);
+  });
+  it('should return 0 for a single alive cell',function(){
+    assert.deepEqual(daysIteration([[1]]),[[0]]);
+  });
+  it('should return array for possible iteration',function(){
+    assert.deepEqual(daysIteration([[1,0],[1,1],[1,0],[1,1]]),[[1,1],[1,1],[0,0],[1,1]]);
+  });
+  it('should return same state for still life',function(){
+    assert.deepEqual(daysIteration([[1,1,0],[1,1,0],[0,0,0]]),[[1,1,0],[1,1,0],[0,0,0]]);
+    assert.deepEqual(daysIteration([[0,1,0],[0,1,0],[0,1,0]]),[[0,0,0],[1,1,1],[0,0,0]]);
+  });
+
+});
+
+
+
