@@ -30,7 +30,7 @@ const joinWithPipes = function(input) {
 }
 
 const generateDeads = function(length) {
-  return new Array(length).fill('D');
+  return new Array(length).fill(0);
 }
 
 const fillBoard = function(length) {
@@ -75,6 +75,7 @@ const getAllNeighbours = function(inputArray, arrayIndex, subArrayIndex) {
   }
 
   neighbours.push(getNeighbour(inputArray[arrayIndex], subArrayIndex)); // horizontal neighbours
+
   if (inputArray[arrayIndex - 1] !== undefined) {
     neighbours.push(getNeighbour(inputArray[arrayIndex - 1], subArrayIndex)); // top diagonal neighbours
   }
@@ -82,8 +83,26 @@ const getAllNeighbours = function(inputArray, arrayIndex, subArrayIndex) {
     neighbours.push(getNeighbour(inputArray[arrayIndex + 1], subArrayIndex)); // bottom diagonal neighbours
   }
   neighbours.push(getVerticalNeighbours(inputArray, arrayIndex, subArrayIndex));
-  return neighbours.reduce((acc, value) => [...acc, ...value], []).sort();
+  return neighbours.toString().split(',').map( x=>+x ).sort();
 }
+
+const countAliveNeighboursOfCell = function(inputArray, arrayIndex, subArrayIndex){
+  return getAllNeighbours(inputArray, arrayIndex, subArrayIndex).filter(x=> x).length;
+}
+
+const isAlive = function(aliveNeighbours, currentState) {
+
+  if(aliveNeighbours < 2 || aliveNeighbours > 3) {
+    return 0;
+  }
+
+  if(aliveNeighbours == 3) {
+    return 1;
+  }
+
+  return currentState;
+}
+
 
 
 module.exports = {
@@ -95,5 +114,7 @@ module.exports = {
   getNeighbour,
   getHorizontalNeighbours,
   getVerticalNeighbours,
-  getAllNeighbours
+  getAllNeighbours,
+  countAliveNeighboursOfCell,
+  isAlive,
 };

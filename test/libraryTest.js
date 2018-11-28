@@ -9,6 +9,8 @@ let {
   getHorizontalNeighbours,
   getVerticalNeighbours,
   getAllNeighbours,
+  countAliveNeighboursOfCell,
+  isAlive,
   fillBoard
 } = require('../src/library.js');
 
@@ -33,8 +35,8 @@ describe('generateDeads', function() {
   });
 
   it('should work for positive numbers', function() {
-    assert.deepEqual(generateDeads(1), ['D']);
-    assert.deepEqual(generateDeads(3), ['D', 'D', 'D']);
+    assert.deepEqual(generateDeads(1), [0]);
+    assert.deepEqual(generateDeads(3), [0, 0, 0]);
   });
 
 });
@@ -46,11 +48,11 @@ describe('fillBoard', function() {
   });
 
   it('should work for length as positive number', function() {
-    assert.deepEqual(fillBoard(1), [ ['D'] ]);
+    assert.deepEqual(fillBoard(1), [ [0] ]);
     assert.deepEqual(fillBoard(3), [
-      ['D', 'D', 'D'],
-      ['D', 'D', 'D'],
-      ['D', 'D', 'D'] ]);
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0] ]);
   });
 
 });
@@ -63,8 +65,8 @@ describe('joinWithPipes', function() {
   });
 
   it('should add pipes to the string', function() {
-    assert.deepEqual(joinWithPipes(["D"]), ["|", " D |"]);
-    assert.deepEqual(joinWithPipes(["D", "D"]), ["|", " D |", " D |"]);
+    assert.deepEqual(joinWithPipes([0]), ["|", " 0 |"]);
+    assert.deepEqual(joinWithPipes([0, 0]), ["|", " 0 |", " 0 |"]);
   });
 
 });
@@ -106,8 +108,12 @@ describe('getNeighbour', function() {
 const arrayOfArray = [
   [1, 2, 3],
   [4, 5, 6],
-  [7, 8, 9]
-]
+  [7, 8, 9] ];
+
+const deadAndAlives = [
+  [1,0,1],
+  [0,0,1],
+  [0,0,1] ];
 
 describe('getHorizontalNeighbours', function() {
 
@@ -154,6 +160,9 @@ describe('getAllNeighbours', function() {
     assert.deepEqual(getAllNeighbours(arrayOfArray, 2, 0), [4, 5, 8]);
     assert.deepEqual(getAllNeighbours(arrayOfArray, 2, 2), [5, 6, 8]);
     assert.deepEqual(getAllNeighbours(arrayOfArray, 0, 2), [2, 5, 6]);
+    assert.deepEqual(getAllNeighbours([ [0,0], [0,0] ], 0, 0), [0, 0, 0]);
+    assert.deepEqual(getAllNeighbours([ [0,1], [0,1] ], 0, 0), [0, 1, 1]);
+
   });
 
   it('should return 5 neighbours for cells in sides', function() {
@@ -167,5 +176,54 @@ describe('getAllNeighbours', function() {
     assert.deepEqual(getAllNeighbours(arrayOfArray, 1, 1), [1, 2, 3, 4, 6, 7, 8, 9]);
   });
 
+
+});
+
+describe('countAliveNeighboursOfCell', function(){
+
+  it('should return 0 for an empty array', function(){
+    assert.equal(countAliveNeighboursOfCell([], 0,0), 0);
+  });
+
+  it('should return 0 for an array containing only falsy values', function(){
+    assert.equal(countAliveNeighboursOfCell([0], 0,0), 0);
+    assert.equal(countAliveNeighboursOfCell([""], 0,0), 0);
+    assert.equal(countAliveNeighboursOfCell([false], 0,0), 0);
+    assert.equal(countAliveNeighboursOfCell([0,0,0], 0,0), 0);
+  });
+
+  it('should return 1 if have one alive neighbour', function(){
+    assert.equal(countAliveNeighboursOfCell([ [0,1], [0,0] ], 0,0), 1);
+    assert.equal(countAliveNeighboursOfCell([ [0,0], [1,0] ], 0,0), 1);
+  });
+
+  it('should return the number of alive members', function(){
+    assert.equal(countAliveNeighboursOfCell(deadAndAlives , 1,1), 4);
+    assert.equal(countAliveNeighboursOfCell(deadAndAlives , 1,2), 2);
+  });
+
+});
+
+describe('isAlive', function(){
+
+  it('should return 0 if alive neighbour is less than 2', function(){
+    assert.deepEqual(isAlive(1,1), 0);
+    assert.deepEqual(isAlive(1,0), 0);
+  });
+ 
+  it('should return 0 if alive neighbour is greater than 3', function(){
+    assert.deepEqual(isAlive(4, 1), 0);
+    assert.deepEqual(isAlive(4, 0), 0);
+  });
+  
+  it('should return 1 if alive neighbour is 2 and current state is 1', function(){
+    assert.deepEqual(isAlive(2,1), 1);
+    assert.deepEqual(isAlive(2,0), 0);
+  });
+
+  it('should return 1 if alive neighbour is 3, at any state', function(){
+    assert.deepEqual(isAlive(3,1), 1);
+    assert.deepEqual(isAlive(3,0), 1);
+  });
 
 });
