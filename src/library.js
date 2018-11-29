@@ -2,23 +2,23 @@
 
 const getNeighbour = function(inputArray, index) {
   let neighbours = [];
-  if (index < 0) { return neighbours }
+  if (index < 0) { return neighbours; }
   neighbours.push(inputArray[index - 1]);
   neighbours.push(inputArray[index + 1]);
 
   return neighbours.filter((x) => x!==undefined);
-}
+};
 
 const getHorizontalNeighbours = function(inputArray, arrayIndex, subArrayIndex) {
   return getNeighbour(inputArray[arrayIndex], subArrayIndex);
-}
+};
 
 const getVerticalNeighbours = function(inputArray, arrayIndex, subArrayIndex) {
   let neighbours = [];
   let topNeighbours = inputArray[arrayIndex - 1];
   let bottomNeighbours = inputArray[arrayIndex + 1];
 
-  if (inputArray[0] === undefined) { return neighbours }
+  if (inputArray[1] === undefined) { return neighbours; }
   if (topNeighbours !== undefined) {
     neighbours.push(topNeighbours[subArrayIndex]);
   }
@@ -28,7 +28,7 @@ const getVerticalNeighbours = function(inputArray, arrayIndex, subArrayIndex) {
   }
 
   return neighbours;
-}
+};
 
 const getAllNeighbours = function(inputArray, arrayIndex, subArrayIndex) {
   let neighbours = [];
@@ -52,61 +52,61 @@ const getAllNeighbours = function(inputArray, arrayIndex, subArrayIndex) {
   //vertical neighbours
   neighbours.push(getVerticalNeighbours(inputArray, arrayIndex, subArrayIndex));
   return neighbours.toString().split(',').map(x=>+x).sort();
-}
+};
 
 const countAliveNeighboursOfCell = function(inputArray, arrayIndex, subArrayIndex){
   return getAllNeighbours(inputArray, arrayIndex, subArrayIndex).filter(x=> x).length;
-}
+};
 
 const isAlive = function(aliveNeighbours, currentState) {
-  if(aliveNeighbours < 2 || aliveNeighbours > 3) { return 0 }
-  if(aliveNeighbours === 3) { return 1 }
+  if(aliveNeighbours < 2 || aliveNeighbours > 3) { return 0; }
+  if(aliveNeighbours === 3) { return 1; }
   return currentState;
-}
+};
 
 const daysIteration = function(inputArray) {
   let result = inputArray.map(x=>x.slice());
 
   inputArray.map( (elemOfArray, count)=>{
-      inputArray[count].map( (elem, index)=>{
+    inputArray[count].map( (elem, index)=>{
 
-          let totalAlive = countAliveNeighboursOfCell(inputArray, count, index);
-          let state =  isAlive(totalAlive, inputArray[count][index]);
-          result[count][index] = state;
+      let totalAlive = countAliveNeighboursOfCell(inputArray, count, index);
+      let state =  isAlive(totalAlive, inputArray[count][index]);
+      result[count][index] = state;
 
-          });
-      });
+    });
+  });
 
   return result;
-}
+};
 
 /* ------- VISUAL -------- */
 
 const repeat = function(symbol, length) {
   return new Array(length).fill(symbol).join('');
-}
+};
 
 const generateDeads = function(length) {
   return new Array(length).fill(0);
-}
+};
 
 const generateLine = (length) => repeat("-", length);
 
 const joinWithPipes = function(input) {
   let output = [];
-  if (input[0] !== undefined) { output.push('|') }
+  if (input[0] !== undefined) { output.push('|'); }
 
-  for (value of input) {
+  for (let value of input) {
     output.push(" " + value + " |");
   }
 
   return output;
-}
+};
 
 const createBoard = function(data) {
   let result = [];
   let lengthOfData = data.length;
-  if (lengthOfData === 0 || data[0].length === 0) { return result }
+  if (lengthOfData === 0 || data[0].length === 0) { return result; }
   result.push(generateLine(lengthOfData * 4 + 1));
 
   for (let index = 0; index < lengthOfData; index++) {
@@ -115,7 +115,7 @@ const createBoard = function(data) {
   }
 
   return result.join("\n");
-}
+};
 
 const fillBoard = function(length) {
   let board = [];
@@ -123,7 +123,7 @@ const fillBoard = function(length) {
     board.push(generateDeads(length));
   }
   return board;
-}
+};
 
 const toggleState = function(inputArray, arrayIndex, subArrayIndex) {
   let result = inputArray.slice();
@@ -131,8 +131,27 @@ const toggleState = function(inputArray, arrayIndex, subArrayIndex) {
   currentState = 1 - currentState;
   result[arrayIndex][subArrayIndex] = currentState;
   return result;
-}
+};
 
+const world = function(dimension,resurrectCells) {
+  let result = fillBoard(dimension); 
+  let arrayIndex = resurrectCells.map(x=>x[0]);
+  let subIndex = resurrectCells.map(x=>x[1]); 
+  for(let count=0; count<arrayIndex.length; count++) {
+    result = toggleState(result,arrayIndex[count],subIndex[count]);
+  }
+  return result;
+};
+
+const getCoordOfAliveCells = function(world) {
+  let result = [];
+  for(let count=0; count<world.length; count++) {
+    for(let index=0; index<world[count].length; index++) {
+      if(world[count][index] === 1) { result.push([count,index]); }
+    }
+  }
+  return result;
+};
 /* ------- EXPORTS ------- */
 
 module.exports = {
@@ -148,5 +167,7 @@ module.exports = {
   countAliveNeighboursOfCell,
   isAlive,
   toggleState,
-  daysIteration
+  daysIteration,
+  world,
+  getCoordOfAliveCells,
 };
